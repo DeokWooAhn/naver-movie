@@ -10,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.moviehub.R
+import com.example.moviehub.data.db.MovieSearchDatabase
 import com.example.moviehub.data.respository.MovieSearchRepositoryImpl
 import com.example.moviehub.databinding.ActivityMainBinding
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
@@ -35,7 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         setupJetpackNavigation()
 
-        val movieSearchRepository = MovieSearchRepositoryImpl()
+        val database = MovieSearchDatabase.getInstance(this)
+        val movieSearchRepository = MovieSearchRepositoryImpl(database)
         val factory = MovieSearchViewModelProviderFactory(movieSearchRepository, this)
         movieSearchViewModel = ViewModelProvider(this, factory)[MovieSearchViewModel::class.java]
     }

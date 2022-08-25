@@ -47,7 +47,7 @@ class SearchFragment : Fragment() {
     private fun setupRecyclerView() {
         movieSearchAdapter = MovieSearchAdapter()
         binding.rvSearchResult.apply {
-//            setHasFixedSize(true)
+            setHasFixedSize(true)
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             addItemDecoration(

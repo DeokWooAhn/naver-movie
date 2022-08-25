@@ -9,12 +9,15 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.moviehub.databinding.FragmentMovieBinding
+import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MovieFragment : Fragment() {
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
 
     private val args by navArgs<MovieFragmentArgs>()
+    private lateinit var movieSearchViewModel: MovieSearchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,12 +31,18 @@ class MovieFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
 
         val movie = args.movie
         binding.webview.apply {
             webViewClient = WebViewClient()
             settings.javaScriptEnabled = true
             loadUrl(movie.link)
+        }
+
+        binding.fabFavorite.setOnClickListener {
+            movieSearchViewModel.saveMovie(movie)
+            Snackbar.make(view, "영화가 저장되었습니다.", Snackbar.LENGTH_SHORT).show()
         }
     }
 
