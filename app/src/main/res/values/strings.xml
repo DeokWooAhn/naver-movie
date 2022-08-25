@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MovieHub</string>
+
+    <string name="search">Search Movies</string>
+    <string name="favorite">Favorite Movies</string>
+    <string name="setting">Setting</string>
+    <string name="movie_info">Movie Info</string>
+</resources>
