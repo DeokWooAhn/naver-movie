@@ -5,6 +5,9 @@ import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
 import com.example.moviehub.data.respository.MovieSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MovieSearchViewModel(
@@ -34,7 +37,9 @@ class MovieSearchViewModel(
         movieSearchRepository.deleteMovies(movie)
     }
 
-    val favoriteMovies: LiveData<List<Item>> = movieSearchRepository.getFavortieMovies()
+    //    val favoriteMovies: Flow<List<Item>> = movieSearchRepository.getFavortieMovies()
+    val favoriteMovies: StateFlow<List<Item>> = movieSearchRepository.getFavortieMovies()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     // SavedState
     var query = String()

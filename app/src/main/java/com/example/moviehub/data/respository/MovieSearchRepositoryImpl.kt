@@ -1,10 +1,10 @@
 package com.example.moviehub.data.respository
 
-import androidx.lifecycle.LiveData
 import com.example.moviehub.data.api.RetrofitInstance.api
 import com.example.moviehub.data.db.MovieSearchDatabase
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class MovieSearchRepositoryImpl(
@@ -24,7 +24,7 @@ class MovieSearchRepositoryImpl(
         db.movieSearchDao().deleteMovie(movie)
     }
 
-    override fun getFavortieMovies(): LiveData<List<Item>> {
+    override fun getFavortieMovies(): Flow<List<Item>> {
         return db.movieSearchDao().getFavoriteMovies()
     }
 }

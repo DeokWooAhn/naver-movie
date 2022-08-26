@@ -1,8 +1,8 @@
 package com.example.moviehub.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.moviehub.data.model.Item
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieSearchDao {
@@ -14,5 +14,5 @@ interface MovieSearchDao {
     suspend fun deleteMovie(movie: Item)
 
     @Query("SELECT * FROM movies")
-    fun getFavoriteMovies(): LiveData<List<Item>>
+    fun getFavoriteMovies(): Flow<List<Item>>
 }

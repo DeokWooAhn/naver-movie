@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviehub.databinding.FragmentFavoriteBinding
 import com.example.moviehub.ui.adapter.MovieSearchAdapter
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import com.example.moviehub.util.collectLatestStateFlow
 import com.google.android.material.snackbar.Snackbar
 
 class FavoriteFragment : Fragment() {
@@ -38,9 +39,28 @@ class FavoriteFragment : Fragment() {
         setupRecyclerView()
         setupTouchHelper(view)
 
-        movieSearchViewModel.favoriteMovies.observe(viewLifecycleOwner) {
+//        movieSearchViewModel.favoriteMovies.observe(viewLifecycleOwner) {
+//            movieSearchAdaper.submitList(it)
+//        }
+
+//        lifecycleScope.launch {
+//            movieSearchViewModel.favoriteMovies.collectLatest {
+//                movieSearchAdaper.submitList(it)
+//            }
+//        }
+
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                movieSearchViewModel.favoriteMovies.collectLatest {
+//                    movieSearchAdaper.submitList(it)
+//                }
+//            }
+//        }
+
+        collectLatestStateFlow(movieSearchViewModel.favoriteMovies) {
             movieSearchAdaper.submitList(it)
         }
+
     }
 
     private fun setupRecyclerView() {

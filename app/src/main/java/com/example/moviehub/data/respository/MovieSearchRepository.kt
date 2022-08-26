@@ -1,8 +1,8 @@
 package com.example.moviehub.data.respository
 
-import androidx.lifecycle.LiveData
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 interface MovieSearchRepository {
@@ -16,5 +16,5 @@ interface MovieSearchRepository {
 
     suspend fun deleteMovies(movie: Item)
 
-    fun getFavortieMovies(): LiveData<List<Item>>
+    fun getFavortieMovies(): Flow<List<Item>>
 }
