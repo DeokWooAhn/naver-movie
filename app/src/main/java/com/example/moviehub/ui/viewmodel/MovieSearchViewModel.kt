@@ -7,9 +7,7 @@ import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
 import com.example.moviehub.data.respository.MovieSearchRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MovieSearchViewModel(
@@ -22,7 +20,7 @@ class MovieSearchViewModel(
     val searchResult: LiveData<SearchResponse> get() = _searchResult
 
     fun searchMovies(query: String) = viewModelScope.launch(Dispatchers.IO) {
-        val response = movieSearchRepository.searchMovies(query)
+        val response = movieSearchRepository.searchMovies(query, 100)
         if (response.isSuccessful) {
             response.body()?.let { body ->
                 _searchResult.postValue(body)
@@ -59,6 +57,19 @@ class MovieSearchViewModel(
         movieSearchRepository.getFavoritePagingMovies()
             .cachedIn(viewModelScope)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagingData.empty())
+
+    private val _searchPagingResult = MutableStateFlow<PagingData<Item>>(PagingData.empty())
+    val searchPagingResult: StateFlow<PagingData<Item>> = _searchPagingResult.asStateFlow()
+
+    fun searchMoviesPaging(query: String) {
+        viewModelScope.launch {
+            movieSearchRepository.searchMoviesPaging(query, display = 1)
+                .cachedIn(viewModelScope)
+                .collect {
+                    _searchPagingResult.value = it
+                }
+        }
+    }
 
     companion object {
         private const val SAVED_STATE_KEY = "query"

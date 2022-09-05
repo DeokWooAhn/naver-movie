@@ -26,24 +26,41 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_director"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_director_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="director"
+        android:text="감독 : "
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@id/iv_article_image"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <TextView
-        android:id="@+id/tv_actor"
+        android:id="@+id/tv_director"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="director"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@id/tv_director_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <TextView
+        android:id="@+id/tv_actor_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:text="배우 : "
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/iv_article_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_director_name" />
+
+    <TextView
+        android:id="@+id/tv_actor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="actor"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_article_image"
+        app:layout_constraintStart_toEndOf="@id/tv_actor_name"
         app:layout_constraintTop_toBottomOf="@id/tv_director" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

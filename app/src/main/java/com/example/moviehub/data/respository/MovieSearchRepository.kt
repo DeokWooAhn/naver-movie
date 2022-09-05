@@ -10,6 +10,7 @@ interface MovieSearchRepository {
 
     suspend fun searchMovies(
         query: String,
+        display: Int,
     ): Response<SearchResponse>
 
     // Room
@@ -21,4 +22,6 @@ interface MovieSearchRepository {
 
     // Paging
     fun getFavoritePagingMovies(): Flow<PagingData<Item>>
+
+    fun searchMoviesPaging(query: String, display: Int): Flow<PagingData<Item>>
 }

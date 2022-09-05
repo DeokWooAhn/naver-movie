@@ -15,9 +15,10 @@ class MovieSearchRepositoryImpl(
     private val db: MovieSearchDatabase
 ) : MovieSearchRepository {
     override suspend fun searchMovies(
-        query: String
+        query: String,
+        display: Int
     ): Response<SearchResponse> {
-        return api.searchMovies(query)
+        return api.searchMovies(query, display)
     }
 
     override suspend fun insertMovies(movie: Item) {
@@ -32,6 +33,7 @@ class MovieSearchRepositoryImpl(
         return db.movieSearchDao().getFavoriteMovies()
     }
 
+    //Paging
     override fun getFavoritePagingMovies(): Flow<PagingData<Item>> {
         val pagingSourceFactory = { db.movieSearchDao().getFavoritePagingMovies() }
 
@@ -43,5 +45,19 @@ class MovieSearchRepositoryImpl(
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow
+    }
+
+    override fun searchMoviesPaging(query: String, display: Int): Flow<PagingData<Item>> {
+        val pagingSourceFactory = { MovieSearchPagingSource(query, display) }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGING_SIZE,
+                enablePlaceholders = false,
+                maxSize = PAGING_SIZE * 3
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
+
     }
 }

@@ -11,16 +11,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviehub.databinding.FragmentSearchBinding
-import com.example.moviehub.ui.adapter.MovieSearchAdapter
+import com.example.moviehub.ui.adapter.MovieSearchPagingAdapter
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
 import com.example.moviehub.util.Constants.SEARCH_MOVIES_TIME_DELAY
+import com.example.moviehub.util.collectLatestStateFlow
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var movieSearchViewModel: MovieSearchViewModel
-    private lateinit var movieSearchAdapter: MovieSearchAdapter
+
+    //    private lateinit var movieSearchAdapter: MovieSearchAdapter
+    private lateinit var movieSearchAdapter: MovieSearchPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,14 +41,19 @@ class SearchFragment : Fragment() {
         setupRecyclerView()
         searchMovies()
 
-        movieSearchViewModel.searchResult.observe(viewLifecycleOwner) { response ->
-            val movies = response.items
-            movieSearchAdapter.submitList(movies)
+//        movieSearchViewModel.searchResult.observe(viewLifecycleOwner) { response ->
+//            val movies = response.items
+//            movieSearchAdapter.submitList(movies)
+//        }
+
+        collectLatestStateFlow(movieSearchViewModel.searchPagingResult) {
+            movieSearchAdapter.submitData(it)
         }
     }
 
     private fun setupRecyclerView() {
-        movieSearchAdapter = MovieSearchAdapter()
+//        movieSearchAdapter = MovieSearchAdapter()
+        movieSearchAdapter = MovieSearchPagingAdapter()
         binding.rvSearchResult.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -77,7 +85,9 @@ class SearchFragment : Fragment() {
                 text?.let {
                     val query = it.toString().trim()
                     if (query.isNotEmpty()) {
-                        movieSearchViewModel.searchMovies(query)
+//                        movieSearchViewModel.searchMovies(query)
+                        movieSearchViewModel.searchMoviesPaging(query)
+                        movieSearchViewModel.query = query
                     }
                 }
             }
