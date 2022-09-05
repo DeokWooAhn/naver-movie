@@ -1,6 +1,8 @@
 package com.example.moviehub.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
 import com.example.moviehub.data.respository.MovieSearchRepository
@@ -51,6 +53,12 @@ class MovieSearchViewModel(
     init {
         query = savedStateHandle.get<String>(SAVED_STATE_KEY) ?: ""
     }
+
+    // Paging
+    val favoritePagingMovies: StateFlow<PagingData<Item>> =
+        movieSearchRepository.getFavoritePagingMovies()
+            .cachedIn(viewModelScope)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagingData.empty())
 
     companion object {
         private const val SAVED_STATE_KEY = "query"

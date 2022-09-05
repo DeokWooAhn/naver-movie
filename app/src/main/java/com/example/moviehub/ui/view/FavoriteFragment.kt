@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviehub.databinding.FragmentFavoriteBinding
-import com.example.moviehub.ui.adapter.MovieSearchAdapter
+import com.example.moviehub.ui.adapter.MovieSearchPagingAdapter
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
 import com.example.moviehub.util.collectLatestStateFlow
 import com.google.android.material.snackbar.Snackbar
@@ -21,7 +21,9 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var movieSearchViewModel: MovieSearchViewModel
-    private lateinit var movieSearchAdaper: MovieSearchAdapter
+
+    //    private lateinit var movieSearchAdapter: MovieSearchAdapter
+    private lateinit var movieSearchAdapter: MovieSearchPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,14 +59,19 @@ class FavoriteFragment : Fragment() {
 //            }
 //        }
 
-        collectLatestStateFlow(movieSearchViewModel.favoriteMovies) {
-            movieSearchAdaper.submitList(it)
+//        collectLatestStateFlow(movieSearchViewModel.favoriteMovies) {
+//            movieSearchAdapter.submitList(it)
+//        }
+
+        collectLatestStateFlow(movieSearchViewModel.favoritePagingMovies) {
+            movieSearchAdapter.submitData(it)
         }
 
     }
 
     private fun setupRecyclerView() {
-        movieSearchAdaper = MovieSearchAdapter()
+//        movieSearchAdapter = MovieSearchAdapter()
+        movieSearchAdapter = MovieSearchPagingAdapter()
         binding.rvFavoriteMovies.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -75,9 +82,9 @@ class FavoriteFragment : Fragment() {
                     DividerItemDecoration.VERTICAL
                 )
             )
-            adapter = movieSearchAdaper
+            adapter = movieSearchAdapter
         }
-        movieSearchAdaper.setOnItemClickListener {
+        movieSearchAdapter.setOnItemClickListener {
             val action = FavoriteFragmentDirections.actionFragmentFavoriteToFragmentMovie(it)
             findNavController().navigate(action)
         }
@@ -97,13 +104,23 @@ class FavoriteFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                val movie = movieSearchAdaper.currentList[position]
-                movieSearchViewModel.deleteMovie(movie)
-                Snackbar.make(view, "영화가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
-                    setAction("취소") {
-                        movieSearchViewModel.saveMovie(movie)
-                    }
-                }.show()
+//                val movie = movieSearchAdaper.currentList[position]
+//                movieSearchViewModel.deleteMovie(movie)
+//                Snackbar.make(view, "영화가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+//                    setAction("취소") {
+//                        movieSearchViewModel.saveMovie(movie)
+//                    }
+//                }.show()
+
+                val pagedMovie = movieSearchAdapter.peek(position)
+                pagedMovie?.let { movie ->
+                    movieSearchViewModel.deleteMovie(movie)
+                    Snackbar.make(view, "영화가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+                        setAction("취소") {
+                            movieSearchViewModel.saveMovie(movie)
+                        }
+                    }.show()
+                }
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).apply {

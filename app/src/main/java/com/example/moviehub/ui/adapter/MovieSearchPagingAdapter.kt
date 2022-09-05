@@ -2,25 +2,26 @@ package com.example.moviehub.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.databinding.ItemMoviePreviewBinding
 
-class MovieSearchAdapter : ListAdapter<Item, MovieSearchViewHolder>(MovieDiffCallback) {
+class MovieSearchPagingAdapter : PagingDataAdapter<Item, MovieSearchViewHolder>(MovieDiffCallback) {
+    override fun onBindViewHolder(holder: MovieSearchViewHolder, position: Int) {
+        val pageMovie = getItem(position)
+        pageMovie?.let { movie ->
+            holder.bind(movie)
+            holder.itemView.setOnClickListener {
+                onItemClcikListener?.let { it(movie) }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieSearchViewHolder {
         return MovieSearchViewHolder(
-            ItemMoviePreviewBinding.inflate(LayoutInflater.from(parent.context))
+            ItemMoviePreviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
-    }
-
-    override fun onBindViewHolder(holder: MovieSearchViewHolder, position: Int) {
-        val movie = currentList[position]
-        holder.bind(movie)
-        holder.itemView.setOnClickListener {
-            onItemClcikListener?.let { it(movie) }
-        }
     }
 
     private var onItemClcikListener: ((Item) -> Unit)? = null

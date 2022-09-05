@@ -1,5 +1,6 @@
 package com.example.moviehub.data.db
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.example.moviehub.data.model.Item
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,7 @@ interface MovieSearchDao {
 
     @Query("SELECT * FROM movies")
     fun getFavoriteMovies(): Flow<List<Item>>
+
+    @Query("SELECT * FROM movies")
+    fun getFavoritePagingMovies(): PagingSource<Int, Item>
 }
