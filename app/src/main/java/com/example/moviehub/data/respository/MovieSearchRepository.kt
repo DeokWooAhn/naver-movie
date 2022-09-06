@@ -20,6 +20,10 @@ interface MovieSearchRepository {
 
     fun getFavortieMovies(): Flow<List<Item>>
 
+    suspend fun saveCacheDeleteMode(mode: Boolean)
+
+    suspend fun getCacheDeleteMode(): Flow<Boolean>
+
     // Paging
     fun getFavoritePagingMovies(): Flow<PagingData<Item>>
 

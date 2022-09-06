@@ -5,4 +5,9 @@
     <string name="favorite">Favorite Movies</string>
     <string name="setting">Setting</string>
     <string name="movie_info">Movie Info</string>
+    <string name="retry">재시도</string>
+    <string name="no_result">검색 결과가 없습니다.</string>
+    <string name="cache_policy">캐시</string>
+    <string name="delete_periodically">캐시 정리</string>
+    <string name="cache_status">상태</string>
 </resources>

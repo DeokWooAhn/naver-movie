@@ -1,5 +1,10 @@
 package com.example.moviehub.data.respository
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -7,12 +12,17 @@ import com.example.moviehub.data.api.RetrofitInstance.api
 import com.example.moviehub.data.db.MovieSearchDatabase
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
+import com.example.moviehub.data.respository.MovieSearchRepositoryImpl.PerferencesKeys.CACHE_DELETE_MODE
 import com.example.moviehub.util.Constants.PAGING_SIZE
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import retrofit2.Response
+import java.io.IOException
 
 class MovieSearchRepositoryImpl(
-    private val db: MovieSearchDatabase
+    private val db: MovieSearchDatabase,
+    private val dataStore: DataStore<Preferences>
 ) : MovieSearchRepository {
     override suspend fun searchMovies(
         query: String,
@@ -31,6 +41,32 @@ class MovieSearchRepositoryImpl(
 
     override fun getFavortieMovies(): Flow<List<Item>> {
         return db.movieSearchDao().getFavoriteMovies()
+    }
+
+    // DataStore
+    private object PerferencesKeys {
+        val CACHE_DELETE_MODE = booleanPreferencesKey("cache_delete_mode")
+    }
+
+    override suspend fun saveCacheDeleteMode(mode: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[CACHE_DELETE_MODE] = mode
+        }
+    }
+
+    override suspend fun getCacheDeleteMode(): Flow<Boolean> {
+        return dataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    exception.printStackTrace()
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { prefs ->
+                prefs[CACHE_DELETE_MODE] ?: false
+            }
     }
 
     //Paging

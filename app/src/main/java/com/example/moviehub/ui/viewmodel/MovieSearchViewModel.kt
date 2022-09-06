@@ -9,6 +9,7 @@ import com.example.moviehub.data.respository.MovieSearchRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MovieSearchViewModel(
     private val movieSearchRepository: MovieSearchRepository,
@@ -20,7 +21,7 @@ class MovieSearchViewModel(
     val searchResult: LiveData<SearchResponse> get() = _searchResult
 
     fun searchMovies(query: String) = viewModelScope.launch(Dispatchers.IO) {
-        val response = movieSearchRepository.searchMovies(query, 100)
+        val response = movieSearchRepository.searchMovies(query, 1)
         if (response.isSuccessful) {
             response.body()?.let { body ->
                 _searchResult.postValue(body)
@@ -50,6 +51,15 @@ class MovieSearchViewModel(
 
     init {
         query = savedStateHandle.get<String>(SAVED_STATE_KEY) ?: ""
+    }
+
+    // DataStore
+    fun saveCacheDeleteMode(value: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        movieSearchRepository.saveCacheDeleteMode(value)
+    }
+
+    suspend fun getCacheDeleteMode() = withContext(Dispatchers.IO) {
+        movieSearchRepository.getCacheDeleteMode().first()
     }
 
     // Paging
