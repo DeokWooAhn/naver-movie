@@ -5,6 +5,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
+import androidx.work.WorkManager
 import com.example.moviehub.data.respository.MovieSearchRepository
 
 @Suppress("UNCHECKED_CAST")
@@ -21,6 +22,7 @@ import com.example.moviehub.data.respository.MovieSearchRepository
 
 class MovieSearchViewModelProviderFactory(
     private val movieSearchRepository: MovieSearchRepository,
+    private val workManager: WorkManager,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null,
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -30,7 +32,7 @@ class MovieSearchViewModelProviderFactory(
         handle: SavedStateHandle
     ): T {
         if (modelClass.isAssignableFrom(MovieSearchViewModel::class.java)) {
-            return MovieSearchViewModel(movieSearchRepository, handle) as T
+            return MovieSearchViewModel(movieSearchRepository, workManager, handle) as T
         }
         throw IllegalArgumentException("ViewModel class not found")
     }

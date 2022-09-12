@@ -1,7 +1,9 @@
 package com.example.moviehub.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -9,12 +11,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.WorkManager
 import com.example.moviehub.R
 import com.example.moviehub.data.db.MovieSearchDatabase
 import com.example.moviehub.data.respository.MovieSearchRepositoryImpl
 import com.example.moviehub.databinding.ActivityMainBinding
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModelProviderFactory
+import com.example.moviehub.util.Constants.DATASTORE_NAME
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
@@ -24,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var movieSearchViewModel: MovieSearchViewModel
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private val Context.dataStore by preferencesDataStore(DATASTORE_NAME)
+    private val workManager = WorkManager.getInstance(application)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         setupJetpackNavigation()
 
         val database = MovieSearchDatabase.getInstance(this)
-        val movieSearchRepository = MovieSearchRepositoryImpl(database)
-        val factory = MovieSearchViewModelProviderFactory(movieSearchRepository, this)
+        val movieSearchRepository = MovieSearchRepositoryImpl(database, dataStore)
+        val factory = MovieSearchViewModelProviderFactory(movieSearchRepository, workManager, this)
         movieSearchViewModel = ViewModelProvider(this, factory)[MovieSearchViewModel::class.java]
     }
 
