@@ -8,13 +8,16 @@ import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
 import com.example.moviehub.data.respository.MovieSearchRepository
 import com.example.moviehub.worker.CacheDeleteWorker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class MovieSearchViewModel(
+@HiltViewModel
+class MovieSearchViewModel @Inject constructor(
     private val movieSearchRepository: MovieSearchRepository,
     private val workManager: WorkManager,
     private val savedStateHandle: SavedStateHandle,

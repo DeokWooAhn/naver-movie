@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.moviehub.data.api.RetrofitInstance.api
+import com.example.moviehub.data.api.MovieSearchApi
 import com.example.moviehub.data.db.MovieSearchDatabase
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.data.model.SearchResponse
@@ -19,10 +19,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieSearchRepositoryImpl(
+@Singleton
+class MovieSearchRepositoryImpl @Inject constructor(
     private val db: MovieSearchDatabase,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val api: MovieSearchApi
 ) : MovieSearchRepository {
     override suspend fun searchMovies(
         query: String,
@@ -84,7 +88,7 @@ class MovieSearchRepositoryImpl(
     }
 
     override fun searchMoviesPaging(query: String, display: Int): Flow<PagingData<Item>> {
-        val pagingSourceFactory = { MovieSearchPagingSource(query, display) }
+        val pagingSourceFactory = { MovieSearchPagingSource(api, query, display) }
 
         return Pager(
             config = PagingConfig(

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,12 +16,15 @@ import com.example.moviehub.ui.adapter.MovieSearchPagingAdapter
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
 import com.example.moviehub.util.collectLatestStateFlow
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    //    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
 
     //    private lateinit var movieSearchAdapter: MovieSearchAdapter
     private lateinit var movieSearchAdapter: MovieSearchPagingAdapter
@@ -36,7 +40,7 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
+//        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
 
         setupRecyclerView()
         setupTouchHelper(view)

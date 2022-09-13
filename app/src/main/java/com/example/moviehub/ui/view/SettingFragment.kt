@@ -6,16 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.moviehub.databinding.FragmentSettingBinding
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingFragment : Fragment() {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    //    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +32,7 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
+//        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
 
         saveSettings()
         loadSettings()

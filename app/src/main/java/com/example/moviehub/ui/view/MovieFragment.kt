@@ -7,17 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.moviehub.databinding.FragmentMovieBinding
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieFragment : Fragment() {
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding!!
 
     private val args by navArgs<MovieFragmentArgs>()
-    private lateinit var movieSearchViewModel: MovieSearchViewModel
+
+    //    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +36,7 @@ class MovieFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
+//        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
 
         val movie = args.movie
         binding.webview.apply {

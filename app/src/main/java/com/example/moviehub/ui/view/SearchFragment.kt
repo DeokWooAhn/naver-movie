@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,12 +19,15 @@ import com.example.moviehub.ui.adapter.MovieSearchPagingAdapter
 import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
 import com.example.moviehub.util.Constants.SEARCH_MOVIES_TIME_DELAY
 import com.example.moviehub.util.collectLatestStateFlow
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    //    private lateinit var movieSearchViewModel: MovieSearchViewModel
+    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
 
     //    private lateinit var movieSearchAdapter: MovieSearchAdapter
     private lateinit var movieSearchAdapter: MovieSearchPagingAdapter
@@ -39,7 +43,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
+//        movieSearchViewModel = (activity as MainActivity).movieSearchViewModel
 
         setupRecyclerView()
         searchMovies()

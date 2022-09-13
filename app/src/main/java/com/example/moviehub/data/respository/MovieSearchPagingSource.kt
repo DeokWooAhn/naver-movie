@@ -2,13 +2,14 @@ package com.example.moviehub.data.respository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.moviehub.data.api.RetrofitInstance.api
+import com.example.moviehub.data.api.MovieSearchApi
 import com.example.moviehub.data.model.Item
 import com.example.moviehub.util.Constants.PAGING_SIZE
 import retrofit2.HttpException
 import java.io.IOException
 
 class MovieSearchPagingSource(
+    private val api: MovieSearchApi,
     private val query: String,
     private val display: Int
 ) : PagingSource<Int, Item>() {
