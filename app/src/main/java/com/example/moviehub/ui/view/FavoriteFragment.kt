@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviehub.databinding.FragmentFavoriteBinding
 import com.example.moviehub.ui.adapter.MovieSearchPagingAdapter
-import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import com.example.moviehub.ui.viewmodel.FavoriteViewModel
 import com.example.moviehub.util.collectLatestStateFlow
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +24,8 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
 
     //    private lateinit var movieSearchViewModel: MovieSearchViewModel
-    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+//    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+    private val favoriteViewModel by viewModels<FavoriteViewModel>()
 
     //    private lateinit var movieSearchAdapter: MovieSearchAdapter
     private lateinit var movieSearchAdapter: MovieSearchPagingAdapter
@@ -67,7 +68,7 @@ class FavoriteFragment : Fragment() {
 //            movieSearchAdapter.submitList(it)
 //        }
 
-        collectLatestStateFlow(movieSearchViewModel.favoritePagingMovies) {
+        collectLatestStateFlow(favoriteViewModel.favoritePagingMovies) {
             movieSearchAdapter.submitData(it)
         }
 
@@ -118,10 +119,10 @@ class FavoriteFragment : Fragment() {
 
                 val pagedMovie = movieSearchAdapter.peek(position)
                 pagedMovie?.let { movie ->
-                    movieSearchViewModel.deleteMovie(movie)
+                    favoriteViewModel.deleteMovie(movie)
                     Snackbar.make(view, "영화가 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
                         setAction("취소") {
-                            movieSearchViewModel.saveMovie(movie)
+                            favoriteViewModel.saveMovie(movie)
                         }
                     }.show()
                 }

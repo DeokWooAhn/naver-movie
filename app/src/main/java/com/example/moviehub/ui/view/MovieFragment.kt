@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.moviehub.databinding.FragmentMovieBinding
-import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import com.example.moviehub.ui.viewmodel.MovieViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +22,8 @@ class MovieFragment : Fragment() {
     private val args by navArgs<MovieFragmentArgs>()
 
     //    private lateinit var movieSearchViewModel: MovieSearchViewModel
-    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+//    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+    private val movieViewModel by viewModels<MovieViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +47,7 @@ class MovieFragment : Fragment() {
         }
 
         binding.fabFavorite.setOnClickListener {
-            movieSearchViewModel.saveMovie(movie)
+            movieViewModel.saveMovie(movie)
             Snackbar.make(view, "영화가 저장되었습니다.", Snackbar.LENGTH_SHORT).show()
         }
     }

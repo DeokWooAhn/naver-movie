@@ -9,14 +9,14 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviehub.databinding.FragmentSearchBinding
 import com.example.moviehub.ui.adapter.MovieSearchPagingAdapter
-import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import com.example.moviehub.ui.viewmodel.SearchViewModel
 import com.example.moviehub.util.Constants.SEARCH_MOVIES_TIME_DELAY
 import com.example.moviehub.util.collectLatestStateFlow
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +27,8 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     //    private lateinit var movieSearchViewModel: MovieSearchViewModel
-    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+//    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+    private val searchViewModel by viewModels<SearchViewModel>()
 
     //    private lateinit var movieSearchAdapter: MovieSearchAdapter
     private lateinit var movieSearchAdapter: MovieSearchPagingAdapter
@@ -54,7 +55,7 @@ class SearchFragment : Fragment() {
 //            movieSearchAdapter.submitList(movies)
 //        }
 
-        collectLatestStateFlow(movieSearchViewModel.searchPagingResult) {
+        collectLatestStateFlow(searchViewModel.searchPagingResult) {
             movieSearchAdapter.submitData(it)
         }
     }
@@ -85,7 +86,7 @@ class SearchFragment : Fragment() {
         var endTime: Long
 
         binding.etSearch.text =
-            Editable.Factory.getInstance().newEditable(movieSearchViewModel.query)
+            Editable.Factory.getInstance().newEditable(searchViewModel.query)
 
         binding.etSearch.addTextChangedListener { text: Editable? ->
             endTime = System.currentTimeMillis()
@@ -94,8 +95,8 @@ class SearchFragment : Fragment() {
                     val query = it.toString().trim()
                     if (query.isNotEmpty()) {
 //                        movieSearchViewModel.searchMovies(query)
-                        movieSearchViewModel.searchMoviesPaging(query)
-                        movieSearchViewModel.query = query
+                        searchViewModel.searchMoviesPaging(query)
+                        searchViewModel.query = query
                     }
                 }
             }

@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.moviehub.databinding.FragmentSettingBinding
-import com.example.moviehub.ui.viewmodel.MovieSearchViewModel
+import com.example.moviehub.ui.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -19,7 +19,8 @@ class SettingFragment : Fragment() {
     private val binding get() = _binding!!
 
     //    private lateinit var movieSearchViewModel: MovieSearchViewModel
-    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+//    private val movieSearchViewModel by activityViewModels<MovieSearchViewModel>()
+    private val settingsViewModel by viewModels<SettingsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,24 +42,24 @@ class SettingFragment : Fragment() {
 
     private fun saveSettings() {
         binding.swCacheDelete.setOnCheckedChangeListener { _, isChecked ->
-            movieSearchViewModel.saveCacheDeleteMode(isChecked)
+            settingsViewModel.saveCacheDeleteMode(isChecked)
             if (isChecked) {
-                movieSearchViewModel.setWork()
+                settingsViewModel.setWork()
             } else {
-                movieSearchViewModel.deleteWork()
+                settingsViewModel.deleteWork()
             }
         }
     }
 
     private fun loadSettings() {
         lifecycleScope.launch {
-            val mode = movieSearchViewModel.getCacheDeleteMode()
+            val mode = settingsViewModel.getCacheDeleteMode()
             binding.swCacheDelete.isChecked = mode
         }
     }
 
     private fun showWorkStatus() {
-        movieSearchViewModel.getWorkStatus().observe(viewLifecycleOwner) { workInfo ->
+        settingsViewModel.getWorkStatus().observe(viewLifecycleOwner) { workInfo ->
             Log.d("WorkManager", workInfo.toString())
             if (workInfo.isEmpty()) {
                 binding.tvWorkStatus.text = "No works"
