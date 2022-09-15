@@ -100,8 +100,7 @@ dependencies {
 
     // DataStore
     implementation(Dependencies.PREFERENCES_DATASTORE)
-
-
+    
     // WorkManager
     implementation(Dependencies.WORKMANGER)
 

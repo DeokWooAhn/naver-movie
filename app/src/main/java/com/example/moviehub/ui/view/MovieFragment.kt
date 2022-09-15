@@ -48,7 +48,7 @@ class MovieFragment : Fragment() {
 
         binding.fabFavorite.setOnClickListener {
             movieViewModel.saveMovie(movie)
-            Snackbar.make(view, "영화가 저장되었습니다.", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(view, "영화 찜", Snackbar.LENGTH_SHORT).show()
         }
     }
 
